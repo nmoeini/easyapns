@@ -202,7 +202,7 @@ class APNS {
 	 * @param string $logPath Path to the log file.
 	 * @access 	public
 	 */
-	function __construct($db, $args=NULL, $certificate=NULL, $sandboxCertificate=NULL, $logPath=NULL) {
+	function __construct($db, $args=NULL, $certificate=NULL, $sandboxCertificate=NULL, $logPath=NULL, $environment=NULL) {
 
 		if(!empty($certificate) && file_exists($certificate))
 		{
@@ -247,7 +247,8 @@ class APNS {
 						$args['pushbadge'],
 						$args['pushalert'],
 						$args['pushsound'],
-						isset($args['clientid'])?$args['clientid']:null
+						isset($args['clientid'])?$args['clientid']:null,
+						$environment
 					);
 					break;
 
@@ -306,7 +307,7 @@ class APNS {
  	 * @param string $clientid The clientid of the app for message grouping
 	 * @access private
 	 */
-	private function _registerDevice($appname, $appversion, $deviceuid, $devicetoken, $devicename, $devicemodel, $deviceversion, $pushbadge, $pushalert, $pushsound, $clientid = NULL){
+	private function _registerDevice($appname, $appversion, $deviceuid, $devicetoken, $devicename, $devicemodel, $deviceversion, $pushbadge, $pushalert, $pushsound, $clientid = NULL, $environment){
 
 		if(strlen($appname)==0) $this->_triggerError('Application Name must not be blank.', E_USER_ERROR);
 		else if(strlen($appversion)==0) $this->_triggerError('Application Version must not be blank.', E_USER_ERROR);
@@ -317,7 +318,11 @@ class APNS {
 		else if(strlen($deviceversion)==0) $this->_triggerError('Device Version must not be blank.', E_USER_ERROR);
 		else if($pushbadge!='disabled' && $pushbadge!='enabled') $this->_triggerError('Push Badge must be either Enabled or Disabled.', E_USER_ERROR);
 		else if($pushalert!='disabled' && $pushalert!='enabled') $this->_triggerError('Push Alert must be either Enabled or Disabled.', E_USER_ERROR);
-		else if($pushsound!='disabled' && $pushsound!='enabled') $this->_triggerError('Push Sount must be either Enabled or Disabled.', E_USER_ERROR);
+		else if($pushsound!='disabled' && $pushsound!='enabled') $this->_triggerError('Push Sound must be either Enabled or Disabled.', E_USER_ERROR);
+		else if(!is_null($environment) && $environment!='sandbox' && $environment!='production') $this->_triggerError('Default environment must be either sandbox, production or NULL if you want to use default value.', E_USER_ERROR);
+
+		//setting environment using default private value if no value provided
+		$environment = is_null($environment)?$this->DEVELOPMENT:$environment;
 
 		$appname = $this->db->prepare($appname);
 		$appversion = $this->db->prepare($appversion);
@@ -347,7 +352,7 @@ class APNS {
 					'{$pushbadge}',
 					'{$pushalert}',
 					'{$pushsound}',
-					'{$this->DEVELOPMENT}',
+					'{$environment}',
 					'active',
 					NOW(),
 					NOW()
@@ -363,6 +368,7 @@ class APNS {
 				`pushbadge`='{$pushbadge}',
 				`pushalert`='{$pushalert}',
 				`pushsound`='{$pushsound}',
+				`development`='{$environment}',
 				`status`='active',
 				`modified`=NOW();";
 		$this->db->query($sql);
