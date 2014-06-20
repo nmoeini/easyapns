@@ -933,13 +933,17 @@ class APNS {
 					unset($usermessage['aps']);
 				}
 
-				$fk_device = $this->db->prepare($deviceid);
-				$message = $this->_jsonEncode($usermessage);
-				$message = $this->db->prepare($message);
-				$delivery = (!empty($when)) ? "'{$when}'":'NOW()';
+				if(empty($usermessage)) {
+					$this->_triggerError('Empty payload. Message will not be delivered.');
+				}
+				else {
+					$fk_device = $this->db->prepare($deviceid);
+					$message = $this->_jsonEncode($usermessage);
+					$message = $this->db->prepare($message);
+					$delivery = (!empty($when)) ? "'{$when}'":'NOW()';
 
-				$this->db->query("SET NAMES 'utf8';"); // force utf8 encoding if not your default
-				$sql = "INSERT INTO `apns_messages`
+					$this->db->query("SET NAMES 'utf8';"); // force utf8 encoding if not your default
+					$sql = "INSERT INTO `apns_messages`
 						VALUES (
 							NULL,
 							'{$clientId}',
@@ -950,7 +954,9 @@ class APNS {
 							NOW(),
 							NOW()
 						);";
-				$this->db->query($sql);
+					$this->db->query($sql);
+				}
+
 				unset($usermessage);
 			}
 		}
