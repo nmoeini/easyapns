@@ -109,7 +109,7 @@ class APNS {
 	* @var string
 	* @access private
 	*/
-	private $ssl = 'ssl://gateway.push.apple.com:2195';
+	private $ssl = 'tls://gateway.push.apple.com:2195';
 
 	/**
 	* Apples Production APNS Feedback Service
@@ -117,7 +117,7 @@ class APNS {
 	* @var string
 	* @access private
 	*/
-	private $feedback = 'ssl://feedback.push.apple.com:2196';
+	private $feedback = 'tls://feedback.push.apple.com:2196';
 
 	/**
 	* Absolute path to your Development Certificate
@@ -141,7 +141,7 @@ class APNS {
 	* @var string
 	* @access private
 	*/
-	private $sandboxSsl = 'ssl://gateway.sandbox.push.apple.com:2195';
+	private $sandboxSsl = 'tls://gateway.sandbox.push.apple.com:2195';
 
 	/**
 	* Apples Sandbox APNS Feedback Service
@@ -149,7 +149,7 @@ class APNS {
 	* @var string
 	* @access private
 	*/
-	private $sandboxFeedback = 'ssl://feedback.sandbox.push.apple.com:2196';
+	private $sandboxFeedback = 'tls://feedback.sandbox.push.apple.com:2196';
 
 	/**
 	* Message to push to user
