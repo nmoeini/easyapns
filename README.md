@@ -1,4 +1,4 @@
-THIS PROJECT IS NO LONGER MAINTAINED BY AUTHOR:
+THIS PROJECT IS NO LONGER MAINTAINED:
 ===
 
 PLEASE NOTE: EasyAPNs is for programmers who are proficient in PHP, MySQL and Objective C. If you are not skilled in these programming languages please use an alternative service such as Urban Airship ( http://urbanairship.com ).
